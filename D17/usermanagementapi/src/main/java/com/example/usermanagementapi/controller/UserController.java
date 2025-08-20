@@ -58,20 +58,19 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User userDetails){
-        return (ResponseEntity<User>) userRepository.findById(id)
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @Valid @RequestBody User userDetails) {
+        return userRepository.findById(id)
                 .map(existingUser -> {
-                    if(!existingUser.getEmail().equals(userDetails.getEmail())) {
-                        if (userRepository.findByEmail(userDetails.getEmail()).isPresent()) {
-                            return ResponseEntity.status(HttpStatus.CONFLICT).build();
-                        }
+                    if (!existingUser.getEmail().equals(userDetails.getEmail()) && 
+                        userRepository.findByEmail(userDetails.getEmail()).isPresent()) {
+                        throw new org.springframework.web.server.ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
                     }
                     existingUser.setName(userDetails.getName());
                     existingUser.setEmail(userDetails.getEmail());
                     User updatedUser = userRepository.save(existingUser);
                     return ResponseEntity.ok(updatedUser);
                 })
-                .orElse(ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }
