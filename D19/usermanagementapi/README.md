@@ -4,7 +4,7 @@ A secure, production-ready REST API for user management built with Spring Boot, 
 
 ## Features
 
-- 🔐 **JWT-based Authentication**
+- 🔐 **Basic Auth-based Authentication**
 - 🔒 **Role-based Access Control (RBAC)**
 - 📝 **User Registration & Management**
 - 🔄 **Password Encryption** with BCrypt
