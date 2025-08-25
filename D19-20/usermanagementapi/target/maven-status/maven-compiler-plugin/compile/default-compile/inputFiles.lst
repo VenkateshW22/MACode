@@ -1,8 +1,0 @@
-/Users/venkateshk22/Documents/github/usermanagementapi/src/main/java/com/example/usermanagementapi/model/User.java
-/Users/venkateshk22/Documents/github/usermanagementapi/src/main/java/com/example/usermanagementapi/UserManagementApiApplication.java
-/Users/venkateshk22/Documents/github/usermanagementapi/src/main/java/com/example/usermanagementapi/exception/GlobalExceptionHandler.java
-/Users/venkateshk22/Documents/github/usermanagementapi/src/main/java/com/example/usermanagementapi/repository/UserRepository.java
-/Users/venkateshk22/Documents/github/usermanagementapi/src/main/java/com/example/usermanagementapi/service/CustomUserDetailsService.java
-/Users/venkateshk22/Documents/github/usermanagementapi/src/main/java/com/example/usermanagementapi/config/DataLoader.java
-/Users/venkateshk22/Documents/github/usermanagementapi/src/main/java/com/example/usermanagementapi/config/SecurityConfig.java
-/Users/venkateshk22/Documents/github/usermanagementapi/src/main/java/com/example/usermanagementapi/controller/UserController.java
