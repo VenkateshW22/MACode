@@ -234,6 +234,8 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.name").value("Updated Name"))
                 .andExpect(jsonPath("$.email").value("updated@example.com"));
     }
+
+    // TODO: Update user when user does not exist should return not found
     
     @Test
     @WithMockUser(roles = "ADMIN")
