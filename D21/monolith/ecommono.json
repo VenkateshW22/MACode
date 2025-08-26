@@ -1,0 +1,181 @@
+{
+  "info": {
+    "name": "E-commerce Mono API LIVE",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"]
+            }
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Wireless Headphones\",\n    \"description\": \"High-quality wireless headphones with noise cancellation\",\n    \"price\": 199.99,\n    \"stockQuantity\": 50\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/create",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "create"]
+            }
+          }
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Wireless Headphones Pro\",\n    \"description\": \"High-quality wireless headphones with noise cancellation and extended battery life\",\n    \"price\": 249.99,\n    \"stockQuantity\": 35\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/products/update/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "update", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Product",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/products/delete/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products", "delete", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/all",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "all"]
+            }
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "1"]
+            }
+          }
+        },
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": 1,\n    \"productId\": 1,\n    \"quantity\": 2,\n    \"orderDate\": \"2025-08-26T12:00:00\",\n    \"status\": \"PENDING\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orders/create",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "create"]
+            }
+          }
+        },
+        {
+          "name": "Update Order",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"status\": \"COMPLETED\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/orders/update/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "update", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Order",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/orders/delete/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "orders", "delete", "1"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    }
+  ]
+}
