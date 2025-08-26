@@ -35,4 +35,12 @@ public class OrderService {
         return orderRepository.save(order);
 
     }
+
+    public Order updateOrder(Long id, Order order){
+        Order existingOrder = orderRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Order not found"));
+        existingOrder.setQuantity(order.getQuantity());
+        existingOrder.setStatus(order.getStatus());
+        return orderRepository.save(existingOrder);
+    }
 }
