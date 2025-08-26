@@ -56,7 +56,7 @@ public class OrderController {
     public ResponseEntity<Order> deleteOrder(@PathVariable Long id){
         try{
             orderRepository.deleteById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }catch (Exception e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

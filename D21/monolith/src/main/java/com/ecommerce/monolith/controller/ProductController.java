@@ -3,6 +3,8 @@ package com.ecommerce.monolith.controller;
 import com.ecommerce.monolith.model.Product;
 import com.ecommerce.monolith.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,29 +22,33 @@ public class ProductController {
     }
 
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        productRepository.findById(id).
+                orElseThrow(() -> new IllegalArgumentException("Product not found"));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/create")
-    public Product createProduct(@RequestBody Product product) {
-        return productRepository.save(product);
+    public ResponseEntity<Product> createProduct(@RequestBody Product product) {
+        productRepository.save(product);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
-    public Product updateProduct(@PathVariable Long id, @RequestBody Product product) {
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, @RequestBody Product product) {
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found"));
         existingProduct.setName(product.getName());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setStockQuantity(product.getStockQuantity());
-        return productRepository.save(existingProduct);
+        productRepository.save(existingProduct);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
-    public void deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Product> deleteProduct(@PathVariable Long id) {
         productRepository.deleteById(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
