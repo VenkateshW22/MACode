@@ -23,15 +23,15 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) {
-        productRepository.findById(id).
+        Product product = productRepository.findById(id).
                 orElseThrow(() -> new IllegalArgumentException("Product not found"));
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(product,HttpStatus.OK);
     }
 
     @PostMapping("/create")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        productRepository.save(product);
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Product savedProduct = productRepository.save(product);
+        return new ResponseEntity<>(savedProduct,HttpStatus.CREATED);
     }
 
     @PutMapping("/update/{id}")
@@ -41,8 +41,8 @@ public class ProductController {
         existingProduct.setName(product.getName());
         existingProduct.setPrice(product.getPrice());
         existingProduct.setStockQuantity(product.getStockQuantity());
-        productRepository.save(existingProduct);
-        return new ResponseEntity<>(HttpStatus.OK);
+        Product updatedProduct =productRepository.save(existingProduct);
+        return new ResponseEntity<>(updatedProduct,HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")
