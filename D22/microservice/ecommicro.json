@@ -1,0 +1,168 @@
+{
+  "info": {
+    "name": "E-Commerce Microservices API (v1)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "ecommerce-microservices-v1"
+  },
+  "item": [
+    {
+      "name": "User Service",
+      "item": [
+        {
+          "name": "Create User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"john_doe\",\n    \"email\": \"john@example.com\"\n}"
+            },
+            "url": "http://localhost:8080/api/v1/users",
+            "description": "Create a new user"
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/v1/users",
+            "description": "Get all users"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/v1/users/1",
+            "description": "Get user by ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Product Service",
+      "item": [
+        {
+          "name": "Create Product",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Smartphone\",\n    \"price\": 699.99,\n    \"description\": \"Latest smartphone model\"\n}"
+            },
+            "url": "http://localhost:8080/api/v1/products",
+            "description": "Create a new product"
+          }
+        },
+        {
+          "name": "Get All Products",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/v1/products",
+            "description": "Get all products"
+          }
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/v1/products/1",
+            "description": "Get product by ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Order Service",
+      "item": [
+        {
+          "name": "Create Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"userId\": 1,\n    \"productId\": 1,\n    \"quantity\": 2\n}"
+            },
+            "url": "http://localhost:8080/api/v1/orders",
+            "description": "Create a new order"
+          }
+        },
+        {
+          "name": "Get All Orders",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/v1/orders",
+            "description": "Get all orders"
+          }
+        },
+        {
+          "name": "Get Order by ID",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/api/v1/orders/1",
+            "description": "Get order by ID"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Service Discovery & Monitoring",
+      "item": [
+        {
+          "name": "Eureka Dashboard",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8761",
+            "description": "View Eureka Dashboard"
+          }
+        },
+        {
+          "name": "API Gateway Routes",
+          "request": {
+            "method": "GET",
+            "url": "http://localhost:8080/actuator/gateway/routes",
+            "description": "View registered API Gateway routes"
+          }
+        }
+      ]
+    }
+  ],
+  "auth": null,
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Add any pre-request scripts here"
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Add test scripts here"
+        ]
+      }
+    }
+  ]
+}
