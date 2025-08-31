@@ -1,0 +1,9 @@
+com/ecommerce/orderservice/client/ProductClient.class
+com/ecommerce/orderservice/service/OrderService.class
+com/ecommerce/orderservice/model/Order.class
+com/ecommerce/orderservice/controller/OrderController.class
+com/ecommerce/orderservice/dto/ProductDto.class
+com/ecommerce/orderservice/client/ProductClient$ProductClientFallback.class
+com/ecommerce/orderservice/OrderServiceApplication.class
+com/ecommerce/orderservice/repository/OrderRepository.class
+com/ecommerce/orderservice/events/OrderPlacedEvent.class

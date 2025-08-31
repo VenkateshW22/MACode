@@ -1,0 +1,4 @@
+com/ecommerce/userservice/controller/UserController.class
+com/ecommerce/userservice/model/User.class
+com/ecommerce/userservice/repository/UserRepository.class
+com/ecommerce/userservice/UserServiceApplication.class

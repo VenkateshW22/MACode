@@ -76,9 +76,12 @@ public class UserRepositoryTest {
     void testFindByEmailFound() {
         // When: We try to find a user by an existing email
         Optional<User> foundUser = userRepository.findByEmail(user1.getEmail());
+        Optional<User> notFoundUser = userRepository.findByEmail("admin@admin.com");
+
 
         // Then: The user should be found and its details should match
         assertThat(foundUser).isPresent(); // Assert that an Optional contains a value
+        assertThat(notFoundUser).isNotPresent();
         assertThat(foundUser.get().getName()).isEqualTo(user1.getName());
         assertThat(foundUser.get().getEmail()).isEqualTo(user1.getEmail());
         assertThat(foundUser.get().getId()).isEqualTo(user1.getId()); // Verify ID is also matched
