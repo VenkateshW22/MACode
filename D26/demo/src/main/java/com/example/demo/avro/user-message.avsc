@@ -6,5 +6,5 @@
     { "name": "userId", "type": "string" },
     { "name": "action", "type": "string" },
     { "name": "timestamp", "type": "long", "logicalType": "timestamp-millis" }
-  ]
+    ]
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.kafka.avro.UserAction;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
@@ -19,7 +20,7 @@ public class AvroProducerService {
                 .setTimestamp(Instant.now().toEpochMilli())
                 .build();
 
-        kafkaTemplate.send("user_actions_avro", action.getUserId(), action);
+        kafkaTemplate.send("user_actions_avro", (String) action.getUserId(), action);
         System.out.println("Sent Avro message: " + action);
     }
 }
