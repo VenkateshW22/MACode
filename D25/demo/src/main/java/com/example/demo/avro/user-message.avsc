@@ -1,0 +1,10 @@
+{
+  "namespace": "com.example.kafka.avro",
+  "type": "record",
+  "name": "UserAction",
+  "fields": [
+    { "name": "userId", "type": "string" },
+    { "name": "action", "type": "string" },
+    { "name": "timestamp", "type": "long", "logicalType": "timestamp-millis" }
+  ]
+}
