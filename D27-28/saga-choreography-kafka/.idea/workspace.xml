@@ -6,12 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2d9c5829-aa33-4cbb-95f9-ee15c9603621" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common-dtos/src/main/java/com/example/dto/request/OrderRequestDto.java" beforeDir="false" afterPath="$PROJECT_DIR$/common-dtos/src/main/java/com/example/dto/request/OrderRequestDto.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/order-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/payment-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/payment-service/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/shipping-service/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shipping-service/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/shipping-service/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shipping-service/src/main/java/com/example/shipping/service/ShippingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/shipping-service/src/main/java/com/example/shipping/service/ShippingService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -56,6 +51,7 @@
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/venkateshk22/Documents/github/MACode/D27-28/saga-choreography-kafka&quot;,
     &quot;onboarding.tips.debug.path&quot;: &quot;/Users/venkateshk22/Documents/github/MACode/D27/saga-choreography-kafka/src/main/java/org/example/Main.java&quot;
   }
 }</component>
