@@ -49,6 +49,7 @@ public class ShippingService {
 
                 ShippingEvent shippingEvent = new ShippingEvent(orderRequest, ShippingStatus.SHIPPING_FAILED);
                 kafkaTemplate.send(shippingTopic, shippingEvent);
+                kafkaTemplate.send(orderTopic, shippingEvent);
                 log.error("Shipping failed. Sent compensation event to topic: {}", shippingTopic);
             } else {
                 shipment.setStatus(ShippingStatus.SHIPPING_SCHEDULED);

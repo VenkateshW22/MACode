@@ -67,6 +67,7 @@ public class PaymentService {
             PaymentEvent paymentEvent = new PaymentEvent(orderRequestDto, PaymentStatus.PAYMENT_COMPLETED);
 
             kafkaTemplate.send(orderTopic, paymentEvent);
+            kafkaTemplate.send(shippingTopic, paymentEvent);
             log.info("Payment processed successfully for order: {}", orderRequestDto.getOrderId());
             log.info("Payment event sent to topic: {}", orderTopic);
         }else {
@@ -98,6 +99,7 @@ public class PaymentService {
 
             OrderEvent reverseEvent = new OrderEvent(orderRequestDto, OrderStatus.ORDER_CANCELLED);
             kafkaTemplate.send(orderTopic, reverseEvent);
+
             log.info("Payment refunded for order: {} and order status: {} in topic: {}", orderRequestDto.getOrderId(), reverseEvent.getOrderStatus(), orderTopic);
         }
     }
