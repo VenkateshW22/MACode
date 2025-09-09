@@ -12,97 +12,93 @@ import com.example.payment.entity.UserBalance;
 import com.example.payment.repository.PaymentRepository;
 import com.example.payment.repository.UserBalanceRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
 @Slf4j
+// Add the KafkaListener annotation at the class level
+@KafkaListener(topics = {"${app.kafka.topic.payment}", "${app.kafka.topic.shipping}"}, groupId = "payment-group")
 public class PaymentService {
-    @Autowired
-    private PaymentRepository paymentRepository;
+    @Autowired private UserBalanceRepository balanceRepo;
+    @Autowired private PaymentRepository paymentRepo;
+    @Autowired private KafkaTemplate<String, Object> kafkaTemplate;
 
-    @Autowired
-    private UserBalanceRepository userBalanceRepository;
-
-    @Autowired
-    private KafkaTemplate<String, Object> kafkaTemplate;
-
-    @Value("${app.kafka.topic.order}")
-    private String orderTopic;
-
-    @Value("${app.kafka.topic.shipping}")
-    private String shippingTopic;
+    @Value("${app.kafka.topic.shipping}") private String shippingTopic;
+    @Value("${app.kafka.topic.order}") private String orderTopic;
 
     @PostConstruct
-    public void init() {
-        userBalanceRepository.saveAll(List.of(
+    public void initUserBalance() {
+        balanceRepo.saveAll(List.of(
                 new UserBalance(null, 101, 5000.0),
                 new UserBalance(null, 102, 300.0)
         ));
     }
 
-    @KafkaListener(topics = "${app.kafka.topic.payment}", groupId = "payment-group")
+    // This handler will be invoked for OrderEvent messages
+    @KafkaHandler
     @Transactional
     public void processPayment(OrderEvent orderEvent) {
-        log.info("Processing payment for order: {}", orderEvent.getOrderRequest().getOrderId());
-        OrderRequestDto orderRequestDto = orderEvent.getOrderRequest();
+        log.info("Received order event to process payment: {}", orderEvent.getOrderRequest().getOrderId());
+        OrderRequestDto orderRequest = orderEvent.getOrderRequest();
         Payment payment = new Payment();
-        payment.setOrderId(orderRequestDto.getOrderId());
+        payment.setOrderId(orderRequest.getOrderId());
 
-        UserBalance userBalance = userBalanceRepository.findByUserId(orderRequestDto.getUserId()).orElseThrow();
+        UserBalance userBalance = balanceRepo.findByUserId(orderRequest.getUserId()).orElseThrow();
 
-        if (userBalance.getBalance() >= orderRequestDto.getPrice()){
-            userBalance.setBalance(userBalance.getBalance()-orderRequestDto.getPrice());
-            userBalanceRepository.save(userBalance);
+        if (userBalance.getBalance() >= orderRequest.getPrice()) {
+            userBalance.setBalance(userBalance.getBalance() - orderRequest.getPrice());
+            balanceRepo.save(userBalance);
             payment.setPaymentStatus(PaymentStatus.PAYMENT_COMPLETED);
-            paymentRepository.save(payment);
+            paymentRepo.save(payment);
 
-            PaymentEvent paymentEvent = new PaymentEvent(orderRequestDto, PaymentStatus.PAYMENT_COMPLETED);
-
-            kafkaTemplate.send(orderTopic, paymentEvent);
+            PaymentEvent paymentEvent = new PaymentEvent(orderRequest, PaymentStatus.PAYMENT_COMPLETED);
             kafkaTemplate.send(shippingTopic, paymentEvent);
-            log.info("Payment processed successfully for order: {}", orderRequestDto.getOrderId());
-            log.info("Payment event sent to topic: {}", orderTopic);
-        }else {
+            log.info("Payment successful. Sent event to topic: {}", shippingTopic);
+        } else {
             payment.setPaymentStatus(PaymentStatus.PAYMENT_FAILED);
-            paymentRepository.save(payment);
-            OrderEvent reverseEvent = new OrderEvent(orderRequestDto, OrderStatus.ORDER_CANCELLED);
+            paymentRepo.save(payment);
+            OrderEvent reverseEvent = new OrderEvent(orderRequest, OrderStatus.ORDER_CANCELLED);
             kafkaTemplate.send(orderTopic, reverseEvent);
-            log.info("Payment failed for order: {} with payment status: {} and order status: {} in topic: {}", orderRequestDto.getOrderId(), payment.getPaymentStatus(), reverseEvent.getOrderStatus(), orderTopic);
-
+            log.info("Payment failed. Sent reverse event to topic: {}", orderTopic);
         }
     }
 
-    @KafkaListener(topics = "${app.kafka.topic.shipping}" , groupId = "shipping-group")
+    // This handler will be invoked for ShippingEvent messages
+    @KafkaHandler
     @Transactional
     public void handleShippingEvent(ShippingEvent shippingEvent) {
-        log.info("Processing shipping for order: {}", shippingEvent.getOrderRequest().getOrderId());
-        if (ShippingStatus.SHIPPING_FAILED.equals(shippingEvent.getShippingStatus())){
-            log.info("Shipping failed for order: {} with shipping status: {} in topic: {}", shippingEvent.getOrderRequest().getOrderId(), shippingEvent.getShippingStatus(), shippingTopic);
-            OrderRequestDto orderRequestDto = shippingEvent.getOrderRequest();
+        if (ShippingStatus.SHIPPING_FAILED.equals(shippingEvent.getShippingStatus())) {
+            log.info("Received shipping failed event, initiating refund for order: {}", shippingEvent.getOrderRequest().getOrderId());
+            OrderRequestDto orderRequest = shippingEvent.getOrderRequest();
 
-            UserBalance userBalance = userBalanceRepository.findByUserId(orderRequestDto.getUserId()).orElseThrow();
-            userBalance.setBalance(userBalance.getBalance()+orderRequestDto.getPrice());
-            userBalanceRepository.save(userBalance);
+            // Compensating Transaction: Refund
+            UserBalance userBalance = balanceRepo.findByUserId(orderRequest.getUserId()).orElseThrow();
+            userBalance.setBalance(userBalance.getBalance() + orderRequest.getPrice());
+            balanceRepo.save(userBalance);
 
-            paymentRepository.findByOrderId(orderRequestDto.getOrderId()).ifPresent(payment -> {
-                payment.setPaymentStatus(PaymentStatus.PAYMENT_REFUNDED);
-                paymentRepository.save(payment);
+            paymentRepo.findByOrderId(orderRequest.getOrderId()).ifPresent(p -> {
+                p.setPaymentStatus(PaymentStatus.PAYMENT_REFUNDED);
+                paymentRepo.save(p);
             });
 
-            OrderEvent reverseEvent = new OrderEvent(orderRequestDto, OrderStatus.ORDER_CANCELLED);
+            OrderEvent reverseEvent = new OrderEvent(orderRequest, OrderStatus.ORDER_CANCELLED);
             kafkaTemplate.send(orderTopic, reverseEvent);
-
-            log.info("Payment refunded for order: {} and order status: {} in topic: {}", orderRequestDto.getOrderId(), reverseEvent.getOrderStatus(), orderTopic);
+            log.info("Refund successful. Sent cancellation event to topic: {}", orderTopic);
         }
     }
 
+    // This handler will ignore any PaymentEvent messages consumed from the shipping topic
+    @KafkaHandler
+    public void handlePaymentEvent(PaymentEvent paymentEvent) {
+        log.info("PaymentEvent received and ignored by PaymentService consumer: {}", paymentEvent.getOrderRequest().getOrderId());
+    }
 }
-

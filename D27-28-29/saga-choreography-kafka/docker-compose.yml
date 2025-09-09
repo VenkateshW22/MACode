@@ -1,6 +1,59 @@
 version: '3.8'
 
 services:
+
+  # Elasticsearch for logging
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    container_name: elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+
+  # Kibana for visualization
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.11.1
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+
+  # Logstash for log processing
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.11.1
+    container_name: logstash
+    ports:
+      - "5044:5044"
+      - "9600:9600"
+    depends_on:
+      - elasticsearch
+    volumes:
+      - ./logstash/pipeline:/usr/share/logstash/pipeline:ro
+    command: logstash -f /usr/share/logstash/pipeline/logstash.conf
+
+  # Distributed tracing service
+  jaeger:
+    image: jaegertracing/all-in-one:1.73.0
+    container_name: jaeger
+    ports:
+      - "6831:6831/udp" # UDP port for jaeger agent
+      - "16686:16686" # Web UI
+      - "14268:14268" # HTTP port for jaeger Collector agent
+      - "4318:4318" # OLTP port for jaeger Collector agent
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+
+
   # Order Service Database
   order-db:
     image: postgres:15
