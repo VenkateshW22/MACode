@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-service
+  template:
+    metadata:
+      labels:
+        app: order-service
+    spec:
+      containers:
+        - name: order-service
+          image: your-docker-username/order-service:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8082
+          env: # Using K8s DNS to find the Eureka service
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+spec:
+  selector:
+    app: order-service
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082

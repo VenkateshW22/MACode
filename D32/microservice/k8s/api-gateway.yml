@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-gateway-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  template:
+    metadata:
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+        - name: api-gateway
+          image: your-docker-username/api-gateway:1.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: "http://eureka-server:8761/eureka"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-gateway
+spec:
+  selector:
+    app: api-gateway
+  type: NodePort # This exposes the service outside the cluster
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      # nodePort: 30090 # Optionally specify a fixed port
